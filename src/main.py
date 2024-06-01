@@ -1,4 +1,5 @@
 from src import server
 
-server = server.Server("localhost", 12345)
-server.start()
+if __name__ == "__main__":
+    server = server.Server("localhost", 12345)
+    server.start()

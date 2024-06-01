@@ -90,18 +90,22 @@ def build_conditional_gan(generator, discriminator):
     Returns:
         conditionalGAN: Compiled cGAN model.
     """
-    cond_gan = cgan.ConditionalGAN(
+    config = cgan.GANConfig(
         discriminator=discriminator,
         generator=generator,
         latent_dim=latent_dim,
         image_size=image_size,
         num_classes=num_classes,
     )
-    cond_gan.compile(
+
+    cond_gan = cgan.ConditionalGAN(
+        config=config,
         d_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
         g_optimizer=keras.optimizers.Adam(learning_rate=0.0003),
         loss_fn=keras.losses.BinaryCrossentropy(from_logits=True),
     )
+
+    cond_gan.compile()
 
     return cond_gan
 
