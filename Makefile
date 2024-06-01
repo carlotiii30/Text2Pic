@@ -12,3 +12,6 @@ test: ## Run tests
 
 pylint:
 	pylint --rcfile=.pylintrc src
+
+coverage: ## Run tests with coverage
+	pytest --cov=src --cov-report=term-missing
