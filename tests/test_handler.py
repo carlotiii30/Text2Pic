@@ -13,6 +13,7 @@ class TestHandler(unittest.TestCase):
             "text": "5"
         }
         expected_file_path = "data/nums/drawn_number_5.png"
+        os.makedirs(os.path.dirname(expected_file_path), exist_ok=True)
         handler = Handler(MagicMock())
 
         # Act
