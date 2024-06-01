@@ -12,7 +12,7 @@ class TestHandler(unittest.TestCase):
             "command": "generate_number",
             "text": "5"
         }
-        expected_file_path = "./data/nums/drawn_number_5.png"
+        expected_file_path = "data/nums/drawn_number_5.png"
         handler = Handler(MagicMock())
 
         # Act
@@ -21,9 +21,8 @@ class TestHandler(unittest.TestCase):
         # Assert
         self.assertTrue(os.path.exists(expected_file_path))
 
-        # Clean up
+        # Cleanup
         os.remove(expected_file_path)
-
 
     def test_execute_command_generate_number_error(self):
         # Arrange
