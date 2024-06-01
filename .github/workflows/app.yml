@@ -30,10 +30,8 @@ jobs:
 
     - name: Lint with pylint
       run: |
-        pip install pylint
-        pylint --rcfile=.pylintrc src
+        poetry run pylint --rcfile=.pylintrc src
 
     - name: Test with pytest
       run: |
-        pip install pytest
-        pytest -s
+        poetry run pytest -s
