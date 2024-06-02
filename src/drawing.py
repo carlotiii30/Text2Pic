@@ -1,8 +1,9 @@
-import keras
 import imageio
+import keras
 import numpy as np
 
 from src import utils
+
 
 def draw_number(number, cond_gan):
     number = int(number)

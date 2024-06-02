@@ -10,8 +10,11 @@ help: ## Show this help
 test: ## Run tests
 	pytest -s
 
-pylint:
+pylint: ## Run pylint
 	pylint --rcfile=.pylintrc src
 
 coverage: ## Run tests with coverage
 	pytest --cov=. --cov-report html:cov_html -s
+
+run: ## Run the application
+	python -m src.main
