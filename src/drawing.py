@@ -28,6 +28,7 @@ def draw_number(number, cond_gan):
 
     return generated_image
 
+
 def draw_image(description, cond_gan):
     noise = np.random.normal(size=(1, utils.latent_dim))
     label = keras.utils.to_categorical([description], builders.num_classes)

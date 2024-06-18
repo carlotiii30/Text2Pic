@@ -13,7 +13,7 @@ class GANConfig:
         self.num_classes = num_classes
 
 
-# pylint: disable=too-many-ancestors, too-many-instance-attributes
+# pylint: disable=too-many-ancestors, too-many-instance-attributes, too-many-locals
 class ConditionalGAN(keras.Model):
     def __init__(
         self, config, d_optimizer, g_optimizer, loss_fn
