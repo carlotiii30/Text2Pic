@@ -3,6 +3,10 @@ import keras
 from src import utils
 from src.nums import cgan
 
+num_channels = 1
+num_classes = 10
+image_size = 28
+
 
 def build_models():
     """
@@ -13,8 +17,8 @@ def build_models():
         keras.Model: Discriminator model.
     """
     # - - - - - - - Calculate the number of input channels - - - - - - -
-    gen_channels = utils.latent_dim + utils.num_classes
-    dis_channels = utils.num_channels + utils.num_classes
+    gen_channels = utils.latent_dim + num_classes
+    dis_channels = num_channels + num_classes
 
     # - - - - - - - Generator - - - - - - -
     generator = keras.Sequential(
@@ -50,22 +54,12 @@ def build_models():
 
 
 def build_conditional_gan(generator, discriminator):
-    """
-    Builds the conditional GAN (cGAN) model.
-
-    Args:
-        generator (keras.Model): Generator model.
-        discriminator (keras.Model): Discriminator model.
-
-    Returns:
-        conditionalGAN: Compiled cGAN model.
-    """
     config = cgan.GANConfig(
         discriminator=discriminator,
         generator=generator,
         latent_dim=utils.latent_dim,
-        image_size=utils.image_size,
-        num_classes=utils.num_classes,
+        image_size=image_size,
+        num_classes=num_classes,
     )
 
     cond_gan = cgan.ConditionalGAN(

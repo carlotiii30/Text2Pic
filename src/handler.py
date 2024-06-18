@@ -2,29 +2,15 @@ import json
 import logging
 
 from src import drawing, utils
+from src.nums import builders
 
 
 # pylint: disable=too-few-public-methods
 class Handler:
-    """Class that handles client requests.
-
-    This class handles the requests sent by the client and executes the
-    corresponding actions.
-
-    Attributes:
-        socket (socket): Client socket.
-    """
-
     def __init__(self, socket):
-        """Class constructor.
-
-        Args:
-            socket: Client socket.
-        """
         self.socket = socket
 
     def handle(self):
-        """Method that handles the client's request."""
         with self.socket:
             data = self._receive_data()
             request = self._process_request(data)
@@ -32,22 +18,9 @@ class Handler:
             self._send_response(response)
 
     def _receive_data(self):
-        """Method that receives the data sent by the client.
-
-        Returns:
-            str: Data sent by the client.
-        """
         return self.socket.recv(1024).decode()
 
     def _process_request(self, data):
-        """Method that processes the data received from the client.
-
-        Args:
-            data (str): Data sent by the client.
-
-        Returns:
-            dict: Request data.
-        """
         try:
             return json.loads(data)
 
@@ -62,19 +35,20 @@ class Handler:
             return response
 
     def _execute_command(self, request):
-        """Method that executes the command sent by the client.
-
-        Args:
-            request (dict): Request data.
-
-        Returns:
-            dict: Response data.
-        """
         command = request.get("command")
         text = request.get("text", "")
 
         if command == "generate_number":
             response = self._generate_number(text)
+
+        elif command == "generate_image":
+            response = {
+                "status": "error",
+                "message": "Command not implemented",
+            }
+
+            logging.error("Command not implemented: %s", command)
+
         else:
             response = {
                 "status": "error",
@@ -86,16 +60,12 @@ class Handler:
         return response
 
     def _generate_number(self, text):
-        """Method that generates an image of a number.
-
-        Args:
-            text (str): Number to generate.
-
-        Returns:
-            dict: Response data.
-        """
         try:
-            cond_gan = utils.load_model_with_weights("models/cgan_nums.weights.h5")
+            generator, discriminator = builders.build_models()
+            cond_gan = builders.build_conditional_gan(generator, discriminator)
+
+            cond_gan = utils.load_model_with_weights("models/cgan_nums.weights.h5", cond_gan)
+
         except FileNotFoundError as e:
             response = {
                 "status": "error",
@@ -129,13 +99,9 @@ class Handler:
 
             return response
 
+    def _generate_image(self, text):
+        # TODO: Implement this method
+        pass
+
     def _send_response(self, response):
-        """Method that sends the response to the client.
-
-        Args:
-            response (dict): Response data.
-
-        Returns:
-            dict: Response data.
-        """
         self.socket.sendall(json.dumps(response).encode())
