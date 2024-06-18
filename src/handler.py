@@ -42,12 +42,7 @@ class Handler:
             response = self._generate_number(text)
 
         elif command == "generate_image":
-            response = {
-                "status": "error",
-                "message": "Command not implemented",
-            }
-
-            logging.error("Command not implemented: %s", command)
+            response = self._generate_image(text)
 
         else:
             response = {
@@ -60,11 +55,46 @@ class Handler:
         return response
 
     def _generate_number(self, text):
-        try:
-            generator, discriminator = builders.build_models()
-            cond_gan = builders.build_conditional_gan(generator, discriminator)
+        cond_gan = self.build_and_load("nums")
+        img = self.draw("nums", cond_gan)
 
-            cond_gan = utils.load_model_with_weights("models/cgan_nums.weights.h5", cond_gan)
+        response = {
+            "status": "success",
+            "message": "Image generated successfully",
+            "image": img,
+        }
+
+        logging.info("Image generated successfully: %s", text)
+
+        return response
+
+    def _generate_image(self, text):
+        response = {
+            "status": "error",
+            "message": "Command not implemented",
+        }
+
+        logging.error("Command not implemented: %s", text)
+
+        return response
+
+    def build_and_load(self, model_type):
+        try:
+            if model_type == "nums":
+                dataset = utils.load_dataset("mnist")
+                generator, discriminator = builders.build_models()
+                cond_gan = builders.build_conditional_gan(generator, discriminator)
+                model_path = "cgan_nums.weights.h5"
+
+            elif model_type == "images":
+                dataset = utils.load_dataset("cifar10")
+                generator, discriminator = builders.build_models()
+                cond_gan = builders.build_conditional_gan(generator, discriminator)
+                model_path = "cgan_images.weights.h5"
+
+            utils.train_model(dataset, cond_gan)
+            utils.save_model_weights(cond_gan, model_path)
+            return cond_gan
 
         except FileNotFoundError as e:
             response = {
@@ -75,19 +105,16 @@ class Handler:
 
             return response
 
+    def draw(self, draw_type, cond_gan):
         try:
-            img = drawing.draw_number(text, cond_gan)
+            if draw_type == "nums":
+                img = drawing.draw_number("5", cond_gan)
+
+            elif draw_type == "images":
+                img = drawing.draw_image("cat", cond_gan)
+
             img = img.tolist()
-
-            response = {
-                "status": "success",
-                "message": "Image generated successfully",
-                "image": img,
-            }
-
-            logging.info("Image generated successfully: %s", text)
-
-            return response
+            return img
 
         except Exception as e:
             response = {
@@ -98,10 +125,6 @@ class Handler:
             logging.error("Error generating the image: %s", str(e))
 
             return response
-
-    def _generate_image(self, text):
-        # TODO: Implement this method
-        pass
 
     def _send_response(self, response):
         self.socket.sendall(json.dumps(response).encode())

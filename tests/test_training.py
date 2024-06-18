@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from src import utils
+from src.nums import builders
 
 
 class TestTraining(unittest.TestCase):
@@ -12,15 +13,15 @@ class TestTraining(unittest.TestCase):
         self.assertEqual(dataset, "mocked_dataset")
 
     def test_build_models(self):
-        utils.build_models = MagicMock(return_value=("mocked_generator", "mocked_discriminator"))
-        generator, discriminator = utils.build_models()
+        builders.build_models = MagicMock(return_value=("mocked_generator", "mocked_discriminator"))
+        generator, discriminator = builders.build_models()
 
         self.assertEqual(generator, "mocked_generator")
         self.assertEqual(discriminator, "mocked_discriminator")
 
     def test_build_conditional_gan(self):
-        utils.build_conditional_gan = MagicMock(return_value="mocked_cond_gan")
-        cond_gan = utils.build_conditional_gan("mocked_generator", "mocked_discriminator")
+        builders.build_conditional_gan = MagicMock(return_value="mocked_cond_gan")
+        cond_gan = builders.build_conditional_gan("mocked_generator", "mocked_discriminator")
 
         self.assertEqual(cond_gan, "mocked_cond_gan")
 
