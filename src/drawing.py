@@ -23,7 +23,7 @@ def draw_number(number, cond_gan):
     generated_image = np.clip(generated_image * 255, 0, 255)
     generated_image = generated_image.astype(np.uint8)
 
-    filename = f"./data/nums/drawn_number_{number}.png"
+    filename = f"./data/results/nums/drawn_number_{number}.png"
     imageio.imwrite(filename, generated_image)
 
     return generated_image
@@ -45,7 +45,7 @@ def draw_image(description, cond_gan):
     generated_image = np.clip(generated_image * 255, 0, 255)
     generated_image = generated_image.astype(np.uint8)
 
-    filename = f"./data/images/drawn_image_{description}.png"
+    filename = f"./data/results/images/drawn_image_{description}.png"
     imageio.imwrite(filename, generated_image)
 
     return generated_image

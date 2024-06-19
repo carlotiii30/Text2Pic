@@ -9,13 +9,6 @@ image_size = 28
 
 
 def build_models():
-    """
-    Builds the generator and discriminator models for the cGAN.
-
-    Returns:
-        keras.Model: Generator model.
-        keras.Model: Discriminator model.
-    """
     # - - - - - - - Calculate the number of input channels - - - - - - -
     gen_channels = utils.latent_dim + num_classes
     dis_channels = num_channels + num_classes
