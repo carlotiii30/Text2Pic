@@ -11,6 +11,7 @@ ruff = "0.4.2"
 keras = "^3.3.3"
 tensorflow = "^2.16.1"
 imageio = "^2.34.1"
+pytest-mock = "^3.14.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "8.1.1"
